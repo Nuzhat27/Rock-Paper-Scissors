@@ -25,7 +25,13 @@ function updateScoreElement()
 .innerHTML=`Wins: ${score.wins} , Losses: ${score.losses} , Ties: ${score.ties}`;
 }
 
-
+document.querySelector('.js-reset-button').addEventListener('click' , () => {
+    score.wins=0;
+    score.losses=0;
+    score.ties=0;
+    localStorage.removeItem('score');
+    updateScoreElement();
+});
 
 
 function pickComputerMove(){
@@ -38,7 +44,7 @@ if(randomNumber>=0 && randomNumber< 1/3){
 
 else if(randomNumber>=1/3 && randomNumber< 2/3){
     computerMove='paper';
-}
+} 
 
 else if(randomNumber>=2/3 && randomNumber< 1){
     computerMove='scissors';
@@ -47,7 +53,59 @@ else if(randomNumber>=2/3 && randomNumber< 1){
 return computerMove;
 }
 
+let isAutoPlaying=false;
+let  intervalId;
 
+//const autoPlay = () => {};
+
+const autoPlay = function autoPlay(){
+
+    if(!isAutoPlaying){
+
+        intervalId = setInterval(() =>{
+            const playerMove=pickComputerMove();
+            playGame(playerMove);
+        } , 1000);
+
+        isAutoPlaying=true;
+    }
+
+    else{
+        clearInterval(intervalId);
+        isAutoPlaying=false;
+    }
+
+   
+}
+
+document.querySelector('.js-auto-button').addEventListener
+('click' , autoPlay);
+
+
+ document.querySelector('.js-rock-button').addEventListener('click' , () => {
+    playGame('rock');
+ });
+
+
+ document.querySelector('.js-paper-button').addEventListener('click' , () => {
+    playGame('paper');
+ });
+
+ document.querySelector('.js-scissors-button').addEventListener('click' , () => {
+    playGame('scissors');
+ });
+
+document.body.addEventListener('keydown' , (event) =>{
+    if (event.key ==='r'){
+        playGame('rock');
+    }
+    else if(event.key==='p'){
+        playGame('paper');
+    }
+    else if(event.key==='s'){
+        playGame('scissors');
+    }
+});
 
 function playGame(playerMove)
 {
@@ -120,3 +178,4 @@ document.querySelector('.js-moves').innerHTML = `You
 <img src="images/${computerMove}-emoji.png" class="move-icon" alt="">Computer`;
 
 }
+
